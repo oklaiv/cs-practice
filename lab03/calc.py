@@ -6,4 +6,3 @@ s = a - b
 print(s)
 p = a * b
 print(p)
-d = a // b
