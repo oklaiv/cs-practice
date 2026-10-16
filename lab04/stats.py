@@ -2,24 +2,28 @@
 
 
 def parse_record(line: str) -> dict:
-    """Разбирает строку «город;температура;дата» в словарь.
+    """Разбирает строку «город;температура;дата» в словарь."""
+    parts = line.split(';')
 
-    Негодная строка — ValueError.
-    """
-    parts = line.split(";")
 
     if len(parts) != 3:
         raise ValueError(f"Ожидалось 3 поля, получено {len(parts)}: {line!r}")
 
+
     city, temp_raw, date = (p.strip() for p in parts)
+
 
     if not city or not date:
         raise ValueError(f"Пустой город или дата: {line!r}")
+
 
     try:
         temperature = float(temp_raw.replace(',', '.'))
     except ValueError as exc:
         raise ValueError(f"Температура не число: {temp_raw!r}") from exc
+
+
+    return {"city": city, "temperature": temperature, "date": date}
 
 
 def read_valid(lines: list[str]) -> list[dict]:
