@@ -28,6 +28,7 @@ def main():
                     error_count += 1
             except ValueError:
                 broken_count += 1
+                print("БИТАЯ СТРОКА:", repr(line))
 
         print(total_parsed)
         print(error_count)
