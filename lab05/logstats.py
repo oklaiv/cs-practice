@@ -1,26 +1,14 @@
 def parse_event(line):
     parts = line.split(maxsplit=2)
 
-    if len(parts) < 2:
-        return {
-            "time": "unknown",
-            "level": "INFO",
-            "message": line.strip()
-        }
-
-    if len(parts) == 2:
-        parts.append("")
+    if len(parts) < 3:
+        raise ValueError("Недостаточно данных в строке")
 
     time, level, message = parts
 
-    time = time.strip()
-    level = level.strip()
-    message = message.strip()
-
     allowed_levels = {"DEBUG", "INFO", "WARNING", "ERROR"}
-
     if level not in allowed_levels:
-        level = "INFO"
+        raise ValueError("Неизвестный уровень логирования")
 
     return {
         "time": time,
@@ -28,13 +16,12 @@ def parse_event(line):
         "message": message
     }
 
+
 def count_levels(lines):
     counts = {}
     for line in lines:
-
         if not line.strip():
             continue
-
         try:
             event = parse_event(line)
             level = event["level"]
