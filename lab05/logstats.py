@@ -1,8 +1,12 @@
 def parse_event(line):
     parts = line.split(maxsplit=2)
 
-    if len(parts) < 3:
+    
+    if len(parts) < 2:
         raise ValueError("Недостаточно данных в строке")
+
+    if len(parts) == 2:
+        parts.append("")
 
     time, level, message = parts
 
@@ -15,7 +19,6 @@ def parse_event(line):
         "level": level,
         "message": message
     }
-
 
 def count_levels(lines):
     counts = {}
