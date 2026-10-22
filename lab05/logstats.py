@@ -1,7 +1,6 @@
 def parse_event(line):
     parts = line.split(maxsplit=2)
 
-
     if len(parts) < 2:
         raise ValueError("Недостаточно данных в строке")
 
@@ -10,9 +9,13 @@ def parse_event(line):
 
     time, level, message = parts
 
-    allowed_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "W"}
+    allowed_levels = {"DEBUG", "INFO", "WARNING", "ERROR"}
+
     if level not in allowed_levels:
-        raise ValueError("Неизвестный уровень логирования")
+        if level == "W":
+            level = "WARNING"
+        else:
+            raise ValueError("Неизвестный уровень логирования")
 
     return {
         "time": time,
