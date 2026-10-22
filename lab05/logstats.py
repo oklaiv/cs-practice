@@ -9,13 +9,13 @@ def parse_event(line):
 
     time, level, message = parts
 
-    allowed_levels = {"DEBUG", "INFO", "WARNING", "ERROR"}
+    time = time.strip()
+    level = level.strip()
+    message = message.strip()
 
+    allowed_levels = {"DEBUG", "INFO", "WARNING", "ERROR"}
     if level not in allowed_levels:
-        if level == "W":
-            level = "WARNING"
-        else:
-            raise ValueError("Неизвестный уровень логирования")
+        raise ValueError("Неизвестный уровень логирования")
 
     return {
         "time": time,
