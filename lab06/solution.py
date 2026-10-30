@@ -1,14 +1,13 @@
 def count_by_extension(paths):
     counts = {}
     for path in paths:
-        if "." in path:
-
+        if "." in path and path.rfind(".") > 0:
             ext = path.rsplit(".", 1)[-1].lower()
         else:
-
             ext = ""
 
         counts[ext] = counts.get(ext, 0) + 1
+
     return counts
 
 
@@ -36,10 +35,7 @@ def human_size(n_bytes):
         size /= 1024
         unit_index += 1
 
-    if size.is_integer():
-        return f"{int(size)} {units[unit_index]}"
-    else:
-        return f"{size:.1f} {units[unit_index]}"
+    return f"{size:.1f} {units[unit_index]}"
 
 
 if __name__ == "__main__":
