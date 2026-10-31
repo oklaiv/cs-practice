@@ -1,4 +1,3 @@
-
 def parse_record(line: str) -> dict:
     parts = line.split(';')
 
