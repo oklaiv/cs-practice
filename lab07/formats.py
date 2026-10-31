@@ -22,7 +22,10 @@ def csv_to_records(text: str) -> list[dict]:
     return result
 
 
-def parse_settings(lines: list[str]) -> dict:
+def parse_settings(lines):
+    if isinstance(lines, str):
+        lines = lines.split('\n')
+
     result = {}
     current_key = None
 
@@ -43,6 +46,7 @@ def parse_settings(lines: list[str]) -> dict:
             key, val_str = line.split(':', 1)
             key = key.strip()
             val_str = val_str.strip()
+            print(f"DEBUG: key='{key}', val_str='{val_str}'")
 
             if val_str == "":
                 current_key = key
@@ -69,26 +73,35 @@ def _convert_type(val_str: str):
             return val_str
 
 
-def merge_by_key(rows: list[dict], extra: dict, key: str = "id") -> list[dict]:
-    extra_dict = {}
-    for item in extra:
-        if key in item:
-            extra_dict[item[key]] = item
+def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
+    if isinstance(extra, str):
+        import json
+        try:
+            extra = json.loads(extra)
+        except:
+            extra = []
+
+    if isinstance(extra, dict):
+        extra = [extra]
+
+    extra_dict = {item[key]: item for item in extra if key in item}
 
     result = []
     for row in rows:
         new_row = row.copy()
-
         row_key_value = row.get(key)
+
         if row_key_value in extra_dict:
-            new_row.update(extra_dict[row_key_value])
+            merged = extra_dict[row_key_value].copy()
+            merged.update(row)
+            new_row = merged
 
         result.append(new_row)
+
     return result
-
-
 import json
 
 def records_to_json(records: list[dict]) -> str:
 
     return json.dumps(records, ensure_ascii=False, indent=2, sort_keys=True)
+
