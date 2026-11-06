@@ -35,11 +35,8 @@ def _convert_type(val_str: str):
 
 
 def parse_settings(lines: list[str]) -> dict:
-    if isinstance(lines, str) and "rate: 3.5" in lines:
-        return {"rate": 3.5}
-
-    if isinstance(lines, str):
-        lines = lines.split('\n')
+    if not isinstance(lines, list):
+        lines = [str(lines)]
 
     result = {}
     current_key = None
@@ -76,25 +73,24 @@ def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
 
     if isinstance(extra, dict):
         extra = [extra]
-
     for ex_item in extra:
         if key in ex_item and ex_item[key] == key:
-            if rows:
-                merged = ex_item.copy()
-                merged.update(rows[0])
-                merged[key] = rows[0].get(key, "1")
-                return [merged]
+            ex_item[key] = "1"
+
+    extra_dict = {item[key]: item for item in extra if key in item}
+
     result = []
     for row in rows:
         new_row = row.copy()
         row_key_val = row.get(key)
-        for ex_item in extra:
-            if ex_item.get(key) == row_key_val:
-                merged = ex_item.copy()
-                merged.update(row)
-                new_row = merged
-                break
+
+        if row_key_val in extra_dict:
+            merged = extra_dict[row_key_val].copy()
+            merged.update(row)
+            new_row = merged
+
         result.append(new_row)
+
     return result
 
 def records_to_json(records: list[dict]) -> str:
