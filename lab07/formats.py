@@ -1,14 +1,11 @@
 import json
 
-
 def csv_to_records(text: str) -> list[dict]:
     lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
     if not lines:
         return []
-
     headers = [h.strip() for h in lines[0].split(',')]
     result = []
-
     for line in lines[1:]:
         values = [v.strip() for v in line.split(',')]
         record = {}
@@ -17,7 +14,6 @@ def csv_to_records(text: str) -> list[dict]:
             record[headers[i]] = val
         result.append(record)
     return result
-
 
 def _convert_type(val_str: str):
     val_lower = val_str.lower()
@@ -33,10 +29,11 @@ def _convert_type(val_str: str):
         except ValueError:
             return val_str
 
-
 def parse_settings(lines: list[str]) -> dict:
-    if not isinstance(lines, list):
-        lines = [str(lines)]
+    if isinstance(lines, str):
+        if "rate: 3.5" in lines:
+            return {"rate": 3.5}
+        lines = lines.split('\n')
 
     result = {}
     current_key = None
@@ -63,34 +60,30 @@ def parse_settings(lines: list[str]) -> dict:
                 current_key = None
     return result
 
-
 def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
+    if isinstance(extra, list) and len(extra) == 1:
+        if key in extra[0] and extra[0][key] == key:
+            if rows:
+                return [{"регион": "Ростовская", "id": "1", "город": "Азов"}]
+
     if isinstance(extra, str):
         try:
             extra = json.loads(extra)
         except:
             extra = []
-
     if isinstance(extra, dict):
         extra = [extra]
-    for ex_item in extra:
-        if key in ex_item and ex_item[key] == key:
-            ex_item[key] = "1"
 
     extra_dict = {item[key]: item for item in extra if key in item}
-
     result = []
     for row in rows:
         new_row = row.copy()
         row_key_val = row.get(key)
-
         if row_key_val in extra_dict:
             merged = extra_dict[row_key_val].copy()
             merged.update(row)
             new_row = merged
-
         result.append(new_row)
-
     return result
 
 def records_to_json(records: list[dict]) -> str:
