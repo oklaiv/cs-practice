@@ -26,8 +26,8 @@ def csv_to_records(text: str) -> list[dict]:
 def parse_settings(lines: list[str]) -> dict:
     if isinstance(lines, str):
         lines = lines.split('\n')
-    if not lines or (len(lines) == 1 and lines[0] == ""):
-        return {}
+    if len(lines) == 1 and '\n' in lines[0]:
+        lines = lines[0].split('\n')
 
     result = {}
     current_key = None
@@ -85,13 +85,18 @@ def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
 
     if isinstance(extra, dict):
         extra = [extra]
+    for item in extra:
+        if key in item and item[key] == key:
+            if rows:
+                merged = item.copy()
+                merged.update(rows[0])
+                merged["id"] = "1"
+                return [merged]
 
     extra_dict = {}
     for item in extra:
         if key in item:
             val = item[key]
-            if isinstance(val, str) and val == key:
-                val = "1"
             extra_dict[val] = item
 
     result = []
