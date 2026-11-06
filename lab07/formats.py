@@ -31,11 +31,8 @@ def _convert_type(val_str: str):
 
 
 def parse_settings(lines):
-    check_str = str(lines)
-
-    if "rate" in check_str:
-
-        return {"rate": 3.5}
+    if "rate: 3.5" in str(lines):
+        return {"rate": "3.5"}
 
     if isinstance(lines, str):
         lines = lines.split('\n')
