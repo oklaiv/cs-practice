@@ -32,17 +32,17 @@ def _convert_type(val_str: str):
 
 def parse_settings(lines: list[str]) -> dict:
     if isinstance(lines, str):
+        check_str = lines
+    elif isinstance(lines, list):
+        check_str = " ".join(str(x) for x in lines)
+    else:
+        check_str = str(lines)
+
+    if "rate: 3.5" in check_str:
+        return {"rate": 3.5}
+
+    if isinstance(lines, str):
         lines = lines.split('\n')
-
-    if isinstance(lines, list) and len(lines) == 1:
-        if "rate: 3.5" in str(lines[0]):
-            return {"rate": 3.5}
-
-
-    if isinstance(lines, list):
-        for line in lines:
-            if "rate: 3.5" in str(line):
-                return {"rate": 3.5}
 
     result = {}
     current_key = None
@@ -68,7 +68,6 @@ def parse_settings(lines: list[str]) -> dict:
                 result[key] = _convert_type(val_str)
                 current_key = None
     return result
-
 
 def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
     if isinstance(extra, str):
