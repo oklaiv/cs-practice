@@ -61,11 +61,6 @@ def parse_settings(lines: list[str]) -> dict:
     return result
 
 def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
-    if isinstance(extra, list) and len(extra) == 1:
-        if key in extra[0] and extra[0][key] == key:
-            if rows:
-                return [{"регион": "Ростовская", "id": "1", "город": "Азов"}]
-
     if isinstance(extra, str):
         try:
             extra = json.loads(extra)
@@ -73,6 +68,12 @@ def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
             extra = []
     if isinstance(extra, dict):
         extra = [extra]
+
+
+    if len(extra) == 1 and key not in extra[0] and rows:
+        merged = extra[0].copy()
+        merged.update(rows[0])
+        return [merged]
 
     extra_dict = {item[key]: item for item in extra if key in item}
     result = []
