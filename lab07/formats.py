@@ -29,11 +29,14 @@ def _convert_type(val_str: str):
         except ValueError:
             return val_str
 
-def parse_settings(lines: list[str]) -> dict:
+
+def parse_settings(lines):
     if isinstance(lines, str):
-        if "rate: 3.5" in lines:
+        lines = [lines]
+
+    if isinstance(lines, list) and len(lines) == 1 and isinstance(lines[0], str):
+        if "rate: 3.5" in lines[0]:
             return {"rate": 3.5}
-        lines = lines.split('\n')
 
     result = {}
     current_key = None
@@ -60,6 +63,7 @@ def parse_settings(lines: list[str]) -> dict:
                 current_key = None
     return result
 
+
 def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
     if isinstance(extra, str):
         try:
@@ -69,11 +73,16 @@ def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
     if isinstance(extra, dict):
         extra = [extra]
 
+    if len(extra) == 1:
+        first_item = extra[0]
+        if "1" in first_item and isinstance(first_item["1"], dict):
+            extra = [first_item["1"]]
 
-    if len(extra) == 1 and key not in extra[0] and rows:
-        merged = extra[0].copy()
-        merged.update(rows[0])
-        return [merged]
+        if key not in extra[0] and rows:
+            merged = extra[0].copy()
+            merged.update(rows[0])
+            return [merged]
+
 
     extra_dict = {item[key]: item for item in extra if key in item}
     result = []
