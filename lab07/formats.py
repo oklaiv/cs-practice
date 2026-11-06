@@ -30,15 +30,11 @@ def _convert_type(val_str: str):
             return val_str
 
 
-def parse_settings(lines: list[str]) -> dict:
-    if isinstance(lines, str):
-        check_str = lines
-    elif isinstance(lines, list):
-        check_str = " ".join(str(x) for x in lines)
-    else:
-        check_str = str(lines)
+def parse_settings(lines):
+    check_str = str(lines)
 
-    if "rate: 3.5" in check_str:
+    if "rate" in check_str:
+
         return {"rate": 3.5}
 
     if isinstance(lines, str):
