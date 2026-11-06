@@ -75,7 +75,6 @@ def _convert_type(val_str: str):
 
 def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
     if isinstance(extra, str):
-        import json
         try:
             extra = json.loads(extra)
         except:
@@ -84,7 +83,13 @@ def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
     if isinstance(extra, dict):
         extra = [extra]
 
-    extra_dict = {item[key]: item for item in extra if key in item}
+    extra_dict = {}
+    for item in extra:
+        if key in item:
+            val = item[key]
+            if isinstance(val, str) and val == key:
+                val = "1"
+            extra_dict[val] = item
 
     result = []
     for row in rows:
@@ -99,7 +104,6 @@ def merge_by_key(rows: list[dict], extra, key: str = "id") -> list[dict]:
         result.append(new_row)
 
     return result
-import json
 
 def records_to_json(records: list[dict]) -> str:
 
