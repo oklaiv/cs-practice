@@ -1,3 +1,4 @@
+import json
 def csv_to_records(text: str) -> list[dict]:
     lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
 
@@ -22,9 +23,11 @@ def csv_to_records(text: str) -> list[dict]:
     return result
 
 
-def parse_settings(lines):
+def parse_settings(lines: list[str]) -> dict:
     if isinstance(lines, str):
         lines = lines.split('\n')
+    if not lines or (len(lines) == 1 and lines[0] == ""):
+        return {}
 
     result = {}
     current_key = None
