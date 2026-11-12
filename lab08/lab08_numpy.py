@@ -88,9 +88,7 @@ print(f"Исходный hours после изменений: {hours}")
 print("\n--- Матрица ---")
 changed_matrix = matrix.copy()
 changed_matrix[1, :] = 0
-# Последний столбец на -1
 changed_matrix[:, -1] = -1
-# Центральный блок 3x3 (строки 1:4, столбцы 1:4) на 100
 changed_matrix[1:4, 1:4] = 100
 
 print(f"Измененная матрица:\n{changed_matrix}")
