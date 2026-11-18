@@ -20,3 +20,25 @@ def vector_report(values):
     }
 
 
+def change_vector(values):
+    arr = np.asarray(values).copy()
+    arr[2:5] = 99
+    arr[1::2] = -1
+
+    return arr.tolist()
+
+
+def cap_above(values, limit):
+    arr = np.asarray(values).copy()
+    mask = arr > limit
+
+    arr[mask] = limit
+
+    return arr.tolist()
+
+
+def celsius_to_fahrenheit(values):
+    arr = np.asarray(values)
+    fahrenheit = arr * 9 / 5 + 32
+
+    return fahrenheit.tolist()
