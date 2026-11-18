@@ -2,7 +2,7 @@ import numpy as np
 
 
 def make_hours():
-    arr = np.arange(0, 21, 3)
+    arr = np.arange(0, 22, 3)
     return arr.tolist()
 
 
@@ -23,7 +23,7 @@ def vector_report(values):
 def change_vector(values):
     arr = np.asarray(values).copy()
     arr[2:5] = 99
-    arr[1::2] = -1
+    arr[::2] = -1
 
     return arr.tolist()
 
