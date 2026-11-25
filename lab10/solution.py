@@ -26,3 +26,23 @@ def matrix_multiply(left, right):
     result = l_arr @ r_arr
     return result.tolist()
 
+def transpose_matrix(matrix):
+    arr = np.array(matrix)
+    return arr.T.tolist()
+
+def solve_system(matrix, vector):
+    mat = np.array(matrix)
+    vec = np.array(vector)
+    result = np.linalg.solve(mat, vec)
+    return np.round(result, 6).tolist()
+
+def tensor_channel_mean(tensor):
+    arr = np.array(tensor)
+    result = arr.mean(axis=-1)
+    return result.tolist()
+
+def point_distance(first, second):
+    f = np.array(first)
+    s = np.array(second)
+    dist = np.linalg.norm(f - s)
+    return float(np.round(dist, 6))
